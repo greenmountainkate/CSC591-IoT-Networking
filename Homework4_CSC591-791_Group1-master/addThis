@@ -1,0 +1,24 @@
+import serial
+
+count = 10
+serPort = serial.Serial("/dev/ttyACM0",2000000)
+data = [0,0,0,0,0,0]
+
+while True:
+        if(serPort.isOpen()):
+                val = serPort.readline()
+                val = val.strip()
+                count +=1
+
+                if val == "Begin":
+                        pubData={"Gyro":"NONE"}
+                        count = -1
+
+                if count in [0,1,2,3,4,5]:
+                        pubData={"Gyro":"NONE"}
+                        data[count] = float(val)
+
+                if val == "End":
+                        print str(data) # Comment this out when actually running
+                        pubData={"Gyro":str(data[4])}
+                        data=[0,0,0,0,0,0]
